@@ -1,19 +1,13 @@
-"""coding=utf-8."""
-
 from typing import List, Optional
 from pydantic import BaseModel
 
-class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
+class Map(BaseModel):
     id: int
-    is_active: bool
+    name: str
+    image: str
+    players: int
+    battle_time: int
+    battle_mode: str
 
     class Config:
         orm_mode = True
