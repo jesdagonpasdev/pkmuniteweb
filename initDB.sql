@@ -1,0 +1,3 @@
+CREATE USER pkmadminuser WITH PASSWORD 'password2021';
+CREATE DATABASE unite;
+GRANT ALL PRIVILEGES ON DATABASE unite TO pkmadminuser;
