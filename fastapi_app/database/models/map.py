@@ -1,6 +1,12 @@
-from sqlalchemy import Column, Integer, String
+import enum
+from sqlalchemy import Column, Integer, String, Enum
 
 from fastapi_app.database.database import Base
+
+class BattleMode(enum.Enum):
+    STANDARD = "STANDARD"
+    RANKED = "RANKED"
+    QUICK = "QUICK"
 
 class Map(Base):
     __tablename__ = "maps"
@@ -10,4 +16,4 @@ class Map(Base):
     image = Column(String)
     players = Column(Integer, nullable=False)
     battle_time = Column(Integer)
-    battle_mode = Column(String, nullable=False)
+    battle_mode = Column(Enum(BattleMode), nullable=False)

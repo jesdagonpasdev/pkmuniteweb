@@ -1,5 +1,13 @@
+import enum
+
 from typing import List, Optional
 from pydantic import BaseModel
+
+
+class BattleMode(str, enum.Enum):
+    STANDARD = "STANDARD"
+    RANKED = "RANKED"
+    QUICK = "QUICK"
 
 class Map(BaseModel):
     id: int
@@ -7,7 +15,7 @@ class Map(BaseModel):
     image: Optional[str] = None
     players: int
     battle_time: Optional[int] = None
-    battle_mode: str
+    battle_mode: BattleMode
 
     # Pydantic's orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
     # (or any other arbitrary object with attributes). So, in will try to read data["id"] and also data.id
@@ -20,4 +28,4 @@ class MapCreate(BaseModel):
     image: Optional[str] = None
     players: int
     battle_time: Optional[int] = None
-    battle_mode: str
+    battle_mode: BattleMode

@@ -40,5 +40,5 @@ def read_user(map_id: int, db: Session = Depends(get_db)):
 def create_map(map: schemas.MapCreate, db: Session = Depends(get_db)):
     db_map = map_crud.get_map_by_attributes(db, map=map)
     if db_map:
-        raise HTTPException(status_code=400, detail="Map already registered")
+        raise HTTPException(status_code=400, detail='Map already registered')
     return map_crud.create_map(db=db, map=map)

@@ -1,1 +1,1 @@
-from fastapi_app.database.models.map import Map
+from fastapi_app.database.models.map import BattleMode, Map
