@@ -14,73 +14,67 @@ class Error(BaseModel):
 class ErrorResponses(Mapping):
     _error_responses = {
         404: {
-            'description': 'Not Found',
-            'model': Error,
-            'content': {
-                'application/json': {
-                    'example': {
-                        'error': {
-                            'code': 404,
-                            'type': 'not_found',
-                            'message': 'The server cannot find the requested resource.',
-                            'errors': {
-                                'Accept-Language': "language 'en' is not available."
-                            }
+            "description": "Not Found",
+            "model": Error,
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": {
+                            "code": 404,
+                            "type": "not_found",
+                            "message": "The server cannot find the requested resource.",
+                            "errors": {}
                         }
                     }
                 }
             }
         },
         406: {
-            'description': 'Not Acceptable',
-            'model': Error,
-            'content': {
-                'application/json': {
-                    'example': {
-                        'error': {
-                            'code': 406,
-                            'type': 'not_acceptable',
-                            'message': 'The server cannot produce a response matching the list of acceptable values '
-                                       'defined in the headers of the request.',
-                            'errors': {
-                                'Accept-Language': "unacceptable value 'en'"
-                            }
+            "description": "Not Acceptable",
+            "model": Error,
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": {
+                            "code": 406,
+                            "type": "not_acceptable",
+                            "message": "The server cannot produce a response matching the list of acceptable values "
+                                       "defined in the headers of the request.",
+                            "errors": {}
                         }
                     }
                 }
             }
         },
         422: {
-            'description': 'Unprocessable Entity',
-            'model': Error,
-            'content': {
-                'application/json': {
-                    'example': {
-                        'error': {
-                            'code': 422,
-                            'type': 'unprocessable_entity',
-                            'message': 'The request was well-formed but was unable to be followed due to semantic '
-                                       'errors.',
-                            'errors': {
-                                'Accept-Language': "unallowed value 'en'"
-                            }
+            "description": "Unprocessable Entity",
+            "model": Error,
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": {
+                            "code": 422,
+                            "type": "unprocessable_entity",
+                            "message": "The request was well-formed but was unable to be followed due to semantic "
+                                       "errors.",
+                            "errors": {}
                         }
                     }
                 }
             }
         },
         503: {
-            'description': 'External Resource Exception',
-            'model': Error,
-            'content': {
-                'application/json': {
-                    'example': {
-                        'error': {
-                            'code': 503,
-                            'type': 'service_unavailable',
-                            'message': 'The request was well-formed but there was an error while calling an external '
-                                       'resource',
-                            'errors': {}
+            "description": "External Resource Exception",
+            "model": Error,
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": {
+                            "code": 503,
+                            "type": "service_unavailable",
+                            "message": "The request was well-formed but there was an error while calling an external "
+                                       "resource",
+                            "errors": {}
                         }
                     }
                 }

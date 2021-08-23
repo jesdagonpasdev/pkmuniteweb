@@ -21,24 +21,41 @@ def get_db():
     finally:
         db.close()
 
-
-@app.get("/maps/", response_model=List[schemas.Map], responses=schemas.ErrorResponses())
+# Maps
+@app.get(
+    "/maps/",
+    response_model=List[schemas.Map],
+    responses=schemas.ErrorResponses(),
+    description="Get all the information of all Maps.",
+    summary="Get all the Maps.")
 def read_maps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     maps = map_crud.get_maps(db, skip=skip, limit=limit)
     return maps
 
 
-@app.get("/maps/{map_id}", response_model=schemas.Map, responses=schemas.ErrorResponses())
-def read_user(map_id: int, db: Session = Depends(get_db)):
+@app.get(
+    "/maps/{map_id}",
+    response_model=schemas.Map,
+    responses=schemas.ErrorResponses(),
+    description="Get all the information of the wanted Map.",
+    summary="Get the wanted Map."
+)
+def read_map(map_id: int, db: Session = Depends(get_db)):
     db_map = map_crud.get_map(db, map_id=map_id)
     if db_map is None:
         raise HTTPException(status_code=404, detail="Map not found")
     return db_map
 
 
-@app.post("/maps/", response_model=schemas.Map, responses=schemas.ErrorResponses())
+@app.post(
+    "/maps/",
+    response_model=schemas.Map,
+    responses=schemas.ErrorResponses(),
+    description="Create a Map with the received information.",
+    summary="Create a Map."
+)
 def create_map(map: schemas.MapCreate, db: Session = Depends(get_db)):
     db_map = map_crud.get_map_by_attributes(db, map=map)
     if db_map:
-        raise HTTPException(status_code=400, detail='Map already registered')
+        raise HTTPException(status_code=400, detail="Map already registered")
     return map_crud.create_map(db=db, map=map)
