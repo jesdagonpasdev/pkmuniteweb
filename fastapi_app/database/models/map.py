@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, Enum
 
 from fastapi_app.database.database import Base
 
-class BattleMode(enum.Enum):
+class BattleMode(str, enum.Enum):
     STANDARD = "STANDARD"
     RANKED = "RANKED"
     QUICK = "QUICK"

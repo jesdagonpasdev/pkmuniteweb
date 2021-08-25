@@ -19,6 +19,7 @@ def create_item(db: Session, item: schemas.ItemCreate):
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
+    db_item.type = db_item.type.value
     return db_item
 
 
@@ -43,7 +44,13 @@ def get_item_by_attributes(db: Session, item: schemas.ItemCreate):
 
 def update_item(db: Session, item: schemas.Item):
     db_item = db.query(models.Item).filter(models.Item.id == item.id).first()
-    model_item = schemas.ItemCreate(**db_item)
+    model_item = schemas.ItemCreate(
+        name=item.name,
+        image=item.image,
+        description=item.description,
+        summary=item.summary,
+        type=item.type
+    )
     update_data = item.dict(exclude_unset=True)
     update_item = model_item.copy(update=update_data)
     db_item = jsonable_encoder(update_item)
@@ -53,7 +60,7 @@ def update_item(db: Session, item: schemas.Item):
 # DELETE
 
 def delete_item(db: Session, item_id: int):
-    db_item = db.query(models.Item).get(item_id)
+    db_item = db.query(models.Item).filter(models.Item.id == item_id).first()
     if db_item is None:
         return 0
     else:

@@ -7,6 +7,7 @@ class ItemType(str, enum.Enum):
     HELDS = "HELDS"
     BATTLE = "BATTLE"
 
+
 class Item(BaseModel):
     id: int = Field(..., description="Item's identifier in the database.", example=1)
     name: str = Field(..., description="Item's name.", example="Leftovers")
@@ -19,6 +20,7 @@ class Item(BaseModel):
     # (or any other arbitrary object with attributes). So, in will try to read data["id"] and also data.id
     class Config:
         orm_mode = True
+
 
 class ItemCreate(BaseModel):
     name: str = Field(..., description="Item's name.", example="Eject Button")

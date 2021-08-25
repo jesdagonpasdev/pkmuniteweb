@@ -1,12 +1,13 @@
 import enum
-from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 
 from fastapi_app.database.database import Base
 
-class ItemType(enum.Enum):
+class ItemType(str, enum.Enum):
     HELDS = "HELDS"
     BATTLE = "BATTLE"
+
 
 class Item(Base):
     __tablename__ = "items"
@@ -18,6 +19,9 @@ class Item(Base):
     image = Column(String)
     type = Column(Enum(ItemType), nullable=False)
 
+    attributes = relationship("Attribute", back_populates="item")
+
+
 class Attribute(Base):
     __tablename__ = "attributes"
 
@@ -26,7 +30,6 @@ class Attribute(Base):
     description = Column(String)
     min_value = Column(Integer, default=0)
     max_value = Column(Integer, default=0)
+    item_id = Column(Integer, ForeignKey("items.id"))
 
-    item_id = relationship("Item", back_populates="owner")
-
-
+    item = relationship("Item", back_populates="attributes")
