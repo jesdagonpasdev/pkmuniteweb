@@ -4,3 +4,5 @@ pgdata
 __pycache__/
 # Environment files
 .env
+
+.vscode
