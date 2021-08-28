@@ -9,6 +9,7 @@ class BattleMode(str, enum.Enum):
     RANKED = "RANKED"
     QUICK = "QUICK"
 
+
 class Map(BaseModel):
     id: int = Field(..., description="Map's identifier in the database.", example=1)
     name: str = Field(..., description="Map's name.", example="Remoat Stadium")

@@ -1,38 +1,32 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
 
-from fastapi_app.crud import map as map_crud
-from fastapi_app.database.database import SessionLocal, engine
+from sqlmodel import SQLModel
 
 from fastapi_app import schemas
-from fastapi_app.database.database import Base
+from fastapi_app.crud import map as map_crud
+from fastapi_app.database import models
+from fastapi_app.database.database import engine
 
-Base.metadata.create_all(bind=engine)
+
+# It is important to import our models before our engine and import models and engine before call this function.
+# Otherwise this function is NOT going to create the tables that we has specified in our models.
+SQLModel.metadata.create_all(engine)
 
 app = FastAPI()
-
-# Dependency
-# We are creating the database session before each request in the dependency with yield, and then closing it afterwards.
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # Maps
 @app.get(
     "/maps/",
-    response_model=List[schemas.Map],
+    response_model=List[models.Map],
     responses=schemas.ErrorResponses(),
     description="Get all the information of all Maps.",
     summary="Get all the Maps.")
-def read_maps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    maps = map_crud.get_maps(db, skip=skip, limit=limit)
-    return maps
+def read_maps(skip: int = 0, limit: int = 100):
+    maps = []
+    return map_crud.get_maps(skip=skip, limit=limit)
 
-
+"""
 @app.get(
     "/maps/{map_id}",
     response_model=schemas.Map,
@@ -59,3 +53,4 @@ def create_map(map: schemas.MapCreate, db: Session = Depends(get_db)):
     if db_map:
         raise HTTPException(status_code=400, detail="Map already registered")
     return map_crud.create_map(db=db, map=map)
+ """
