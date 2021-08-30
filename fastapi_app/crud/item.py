@@ -19,7 +19,6 @@ def create_item(db: Session, item: schemas.ItemCreate):
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
-    db_item.type = db_item.type.value
     return db_item
 
 
