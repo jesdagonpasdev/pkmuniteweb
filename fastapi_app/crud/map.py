@@ -21,7 +21,7 @@ def get_maps(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Map).offset(skip).limit(limit).all()
 
 
-def create_map(db: Session, map: schemas.Map):
+def create_map(db: Session, map: schemas.MapCreate):
     db_map = models.Map(
         name=map.name,
         image=map.image,
@@ -32,4 +32,5 @@ def create_map(db: Session, map: schemas.Map):
     db.add(db_map)
     db.commit()
     db.refresh(db_map)
+    db_map.battle_mode = db_map.battle_mode.value
     return db_map
