@@ -1,16 +1,8 @@
-import enum
-
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 
 from fastapi_app.database.database import Base
-
-
-class MapStreet(str, enum.Enum):
-    TOP = "TOP"
-    MID = "MID"
-    BOTTOM = "BOTTOM"
-    ALL = "ALL"
+from fastapi_app.database.models import MapStreet
 
 
 class Build(Base):
