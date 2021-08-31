@@ -32,5 +32,4 @@ def create_map(db: Session, map: schemas.MapCreate):
     db.add(db_map)
     db.commit()
     db.refresh(db_map)
-    db_map.battle_mode = db_map.battle_mode.value
     return db_map

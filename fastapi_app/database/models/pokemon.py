@@ -54,11 +54,11 @@ class Stadistics(Base):
     __tablename__ = "stadistics"
     
     pokemon_id = Column(Integer, ForeignKey("pokemons.id"), primary_key=True, index=True)
-    offense = Column(Float, nullable=False, default=0)
-    endurance = Column(Float, nullable=False, default=0)
-    mobility = Column(Float, nullable=False, default=0)
-    scoring = Column(Float, nullable=False, default=0)
-    support = Column(Float, nullable=False, default=0)
+    offense = Column(Float, nullable=False)
+    endurance = Column(Float, nullable=False)
+    mobility = Column(Float, nullable=False)
+    scoring = Column(Float, nullable=False)
+    support = Column(Float, nullable=False)
 
     pokemon = relationship("Pokemon", back_populates="stadistics")
 
@@ -67,8 +67,8 @@ class PokemonPrice(Base):
     __tablename__ = "pokemon_prices"
     
     pokemon_id = Column(Integer, ForeignKey("pokemons.id"), primary_key=True, index=True)
-    aeos_coins = Column(Integer, nullable=False, default=0)
-    aeos_gems = Column(Integer, nullable=False, default=0)
+    aeos_coins = Column(Integer, nullable=False)
+    aeos_gems = Column(Integer, nullable=False)
 
     pokemon = relationship("Pokemon", back_populates="prices")
 
@@ -79,6 +79,6 @@ class Skin(Base):
     id = Column(Integer, primary_key=True, index=True)
     pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
     image = Column(String)
-    gems_cost = Column(Integer, nullable=False, default=0)
+    gems_cost = Column(Integer, nullable=False)
 
     pokemon = relationship("Pokemon", back_populates="skins")
