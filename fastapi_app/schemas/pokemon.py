@@ -3,6 +3,8 @@ import enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
+from fastapi_app.schemas.move import Move
+
 
 class MapStreet(str, enum.Enum):
     TOP = "TOP"

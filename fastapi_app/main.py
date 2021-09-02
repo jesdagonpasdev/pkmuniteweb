@@ -122,3 +122,65 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Item not registered.")
     else:
         return True
+
+
+# Pokemon
+@app.get(
+    "/pokemons/",
+    response_model=List[schemas.Pokemon],
+    responses=schemas.ErrorResponses(),
+    description="Get all the information of all Items.",
+    summary="Get all the Items.")
+def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    items = item_crud.get_items(db, skip=skip, limit=limit)
+    return items
+
+
+@app.get(
+    "/items/{item_id}",
+    response_model=schemas.Item,
+    responses=schemas.ErrorResponses(),
+    description="Get all the information of the wanted Item.",
+    summary="Get the wanted Item."
+)
+def read_item(item_id: int, db: Session = Depends(get_db)):
+    db_item = item_crud.get_item(db, item_id=item_id)
+    if db_item is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return db_item
+
+
+@app.patch(
+    "/items/{item_id}",
+    response_model=schemas.Item
+)
+async def update_item(item: schemas.Item, db: Session = Depends(get_db)):
+    update_item = item_crud.update_item(db, item=item)
+    return update_item
+
+
+@app.post(
+    "/items/",
+    response_model=schemas.Item,
+    responses=schemas.ErrorResponses(),
+    description="Create an Item with the received information.",
+    summary="Create an Item."
+)
+def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
+    db_item = item_crud.get_item_by_attributes(db, item=item)
+    if db_item:
+        raise HTTPException(status_code=400, detail="Item already registered.")
+    return item_crud.create_item(db=db, item=item)
+
+
+@app.delete(
+    "/items/{item_id}",
+    description="Delete all the information of the selected Item.",
+    summary="Delete the selected Item."
+)
+async def delete_item(item_id: int, db: Session = Depends(get_db)):
+    result = item_crud.delete_item(db, item_id=item_id)
+    if result == 0:
+        raise HTTPException(status_code=400, detail="Item not registered.")
+    else:
+        return True
