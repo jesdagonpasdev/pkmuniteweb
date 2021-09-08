@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 
-
 class Attribute(BaseModel):
     id: int = Field(..., description="Attribute's identifier in the database.", example=1)
     name: str = Field(..., description="Attribute's name.", example="HP")
