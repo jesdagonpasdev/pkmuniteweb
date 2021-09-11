@@ -23,7 +23,7 @@ def create_pokemon(db: Session, pokemon: schemas.PokemonCreate):
     db.refresh(db_pokemon)
     return db_pokemon
 
-def create_stadistics(db: Session, stadistics: schemas.Stadistics):
+def create_stadistics(db: Session, stadistics: schemas.StadisticsCreate):
     db_stadistics = models.Stadistics(
         pokemon_id=stadistics.pokemon_id,
         offense=stadistics.offense,

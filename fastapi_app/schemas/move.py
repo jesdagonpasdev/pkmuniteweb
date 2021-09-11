@@ -24,8 +24,7 @@ class MoveSet(str, enum.Enum):
     PASIVE = 4
 
 
-class MoveBase(BaseModel):    
-    pokemon_id: int = Field(..., description="Identifier of the Pokemon to which the move belongs to.", example=1)
+class MoveBase(BaseModel):
     name: str = Field(..., description="Move's name.", example="Thunder")
     description: Optional[str] = Field(..., description="Move's details.", example="Throw a thunder in an area that stun the enemies.")
     type: MoveType  = Field(..., description="Move's type.", example="AREA")
@@ -35,7 +34,8 @@ class MoveBase(BaseModel):
     cool_down: int = Field(..., description="Time, in second, to use the move again.", example=8)
 
 class Move(MoveBase):
-    id: int = Field(..., description="Move's identifier in the database.", example=1)
+    id: int = Field(..., description="Move's identifier in the database.", example=1)    
+    pokemon_id: int = Field(..., description="Identifier of the Pokemon to which the move belongs to.", example=1)
 
 class MoveCreate(MoveBase):
     pass

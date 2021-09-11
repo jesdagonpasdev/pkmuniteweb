@@ -4,10 +4,11 @@ from sqlalchemy.orm import Session
 
 from fastapi_app.crud import map as map_crud
 from fastapi_app.crud import item as item_crud
-from fastapi_app.database.database import SessionLocal, engine
+from fastapi_app.crud import pokemon as pokemon_crud
+from fastapi_app.database.database import Base, SessionLocal, engine
+from fastapi_app.logic import pokemon as pokemon_logic
 
 from fastapi_app import schemas
-from fastapi_app.database.database import Base
 
 Base.metadata.create_all(bind=engine)
 
@@ -93,8 +94,8 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     response_model=schemas.Item
 )
 async def update_item(item: schemas.Item, db: Session = Depends(get_db)):
-    update_item = item_crud.update_item(db, item=item)
-    return update_item
+    updated_item = item_crud.update_item(db, item=item)
+    return updated_item
 
 
 @app.post(
@@ -129,58 +130,60 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
     "/pokemons/",
     response_model=List[schemas.Pokemon],
     responses=schemas.ErrorResponses(),
-    description="Get all the information of all Items.",
-    summary="Get all the Items.")
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = item_crud.get_items(db, skip=skip, limit=limit)
-    return items
+    description="Get all the information of all Pokemons.",
+    summary="Get all the Pokemons.")
+def read_pokemons(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    pokemons = pokemon_crud.get_pokemons(db, skip=skip, limit=limit)
+    return pokemons
 
 
 @app.get(
-    "/items/{item_id}",
-    response_model=schemas.Item,
+    "/pokemons/{pokemon_id}",
+    response_model=schemas.Pokemon,
     responses=schemas.ErrorResponses(),
-    description="Get all the information of the wanted Item.",
-    summary="Get the wanted Item."
+    description="Get all the information of the wanted Pokemon.",
+    summary="Get the wanted Pokemon."
 )
-def read_item(item_id: int, db: Session = Depends(get_db)):
-    db_item = item_crud.get_item(db, item_id=item_id)
-    if db_item is None:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return db_item
+def read_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
+    pokemon = pokemon_crud.get_pokemon(db, pokemon_id=pokemon_id)
+    if pokemon is None:
+        raise HTTPException(status_code=404, detail="Pokemon not found")
+    return pokemon
 
 
 @app.patch(
-    "/items/{item_id}",
-    response_model=schemas.Item
+    "/pokemons/{pokemon_id}",
+    response_model=schemas.Pokemon
 )
-async def update_item(item: schemas.Item, db: Session = Depends(get_db)):
-    update_item = item_crud.update_item(db, item=item)
-    return update_item
-
+async def update_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)):
+    updated_pokemon = pokemon_crud.update_pokemon(db, pokemon=pokemon)
+    return updated_pokemon 
+  
 
 @app.post(
-    "/items/",
-    response_model=schemas.Item,
+    "/pokemons/",
+    response_model=schemas.Pokemon,
     responses=schemas.ErrorResponses(),
-    description="Create an Item with the received information.",
-    summary="Create an Item."
+    description="Create an Pokemon with the received information.",
+    summary="Create an Pokemon."
 )
-def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
-    db_item = item_crud.get_item_by_attributes(db, item=item)
-    if db_item:
-        raise HTTPException(status_code=400, detail="Item already registered.")
-    return item_crud.create_item(db=db, item=item)
+def create_pokemon(pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)):
+    try:
+        new_pokemon = pokemon_logic.pokemon_create(db, pokemon=pokemon)
+    except pokemon_logic.PokemonAlreadyExist:
+        raise HTTPException(status_code=400, detail="Pokemon already registered.")
+
+    return new_pokemon
 
 
 @app.delete(
-    "/items/{item_id}",
-    description="Delete all the information of the selected Item.",
-    summary="Delete the selected Item."
+    "/pokemons/{pokemon_id}",
+    description="Delete all the information of the selected Pokemon.",
+    summary="Delete the selected Pokemon."
 )
-async def delete_item(item_id: int, db: Session = Depends(get_db)):
-    result = item_crud.delete_item(db, item_id=item_id)
+async def delete_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
+    result = pokemon_crud.delete_pokemon(db, pokemon_id=pokemon_id)
     if result == 0:
-        raise HTTPException(status_code=400, detail="Item not registered.")
+        raise HTTPException(status_code=400, detail="Pokemon not registered.")
     else:
         return True
