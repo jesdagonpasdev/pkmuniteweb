@@ -23,19 +23,33 @@ def create_pokemon(db: Session, pokemon: schemas.PokemonCreate):
     db.refresh(db_pokemon)
     return db_pokemon
 
-def create_stadistics(db: Session, stadistics: schemas.StadisticsCreate):
-    db_stadistics = models.Stadistics(
-        pokemon_id=stadistics.pokemon_id,
-        offense=stadistics.offense,
-        endurance=stadistics.endurance,
-        mobility=stadistics.mobility,
-        scoring=stadistics.scoring,
-        support=stadistics.support
-    )
+def create_stadistics(db: Session, stadistics: schemas.StadisticsCreate, pokemon_id: int):
+    db_stadistics = models.Stadistics(**stadistics.dict(), pokemon_id=pokemon_id)
     db.add(db_stadistics)
     db.commit()
     db.refresh(db_stadistics)
     return db_stadistics
+
+def create_prices(db: Session, prices: schemas.PokemonPriceCreate, pokemon_id: int):
+    db_prices = models.PokemonPrice(**prices.dict(), pokemon_id=pokemon_id)
+    db.add(db_prices)
+    db.commit()
+    db.refresh(db_prices)
+    return db_prices
+
+def create_skin(db: Session, skin: schemas.StadisticsCreate, pokemon_id: int):
+    db_skin = models.Skin(**skin.dict(), pokemon_id=pokemon_id)
+    db.add(db_skin)
+    db.commit()
+    db.refresh(db_skin)
+    return db_skin
+
+def create_move(db: Session, move: schemas.StadisticsCreate, pokemon_id: int):
+    db_move = models.Move(**move.dict(), pokemon_id=pokemon_id)
+    db.add(db_move)
+    db.commit()
+    db.refresh(db_move)
+    return db_move
     
 
 

@@ -131,7 +131,9 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
     response_model=List[schemas.Pokemon],
     responses=schemas.ErrorResponses(),
     description="Get all the information of all Pokemons.",
-    summary="Get all the Pokemons.")
+    summary="Get all the Pokemons.",
+    tags=['Pokemons']
+)
 def read_pokemons(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     pokemons = pokemon_crud.get_pokemons(db, skip=skip, limit=limit)
     return pokemons
@@ -142,7 +144,8 @@ def read_pokemons(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     response_model=schemas.Pokemon,
     responses=schemas.ErrorResponses(),
     description="Get all the information of the wanted Pokemon.",
-    summary="Get the wanted Pokemon."
+    summary="Get the wanted Pokemon.",
+    tags=['Pokemons']
 )
 def read_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
     pokemon = pokemon_crud.get_pokemon(db, pokemon_id=pokemon_id)
@@ -153,7 +156,11 @@ def read_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
 
 @app.patch(
     "/pokemons/{pokemon_id}",
-    response_model=schemas.Pokemon
+    response_model=schemas.Pokemon,
+    responses=schemas.ErrorResponses(),
+    description="Upadate a Pokemon with the received information.",
+    summary="Update a Pokemon.",
+    tags=['Pokemons']
 )
 async def update_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)):
     updated_pokemon = pokemon_crud.update_pokemon(db, pokemon=pokemon)
@@ -164,14 +171,17 @@ async def update_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)
     "/pokemons/",
     response_model=schemas.Pokemon,
     responses=schemas.ErrorResponses(),
-    description="Create an Pokemon with the received information.",
-    summary="Create an Pokemon."
+    description="Create a Pokemon with the received information.",
+    summary="Create a Pokemon.",
+    tags=['Pokemons']
 )
 def create_pokemon(pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)):
     try:
         new_pokemon = pokemon_logic.pokemon_create(db, pokemon=pokemon)
     except pokemon_logic.PokemonAlreadyExist:
         raise HTTPException(status_code=400, detail="Pokemon already registered.")
+    except pokemon_logic.PokemonCreateException:
+        raise HTTPException(status_code=500, detail="An error occurred while trying to create a new Pokemon.")
 
     return new_pokemon
 
@@ -179,7 +189,8 @@ def create_pokemon(pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)
 @app.delete(
     "/pokemons/{pokemon_id}",
     description="Delete all the information of the selected Pokemon.",
-    summary="Delete the selected Pokemon."
+    summary="Delete the selected Pokemon.",
+    tags=['Pokemons']
 )
 async def delete_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
     result = pokemon_crud.delete_pokemon(db, pokemon_id=pokemon_id)

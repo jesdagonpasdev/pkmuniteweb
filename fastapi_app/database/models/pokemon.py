@@ -32,6 +32,25 @@ class AttackType(str, enum.Enum):
     PHYSICAL = "PHYSICAL"
 
 
+class MoveType(str, enum.Enum):
+    AREA = "AREA"
+    BUFF = "BUFF"
+    DASH = "DASH"
+    DEBUFF = "DEBUFF"
+    HINDRANCE = "HINDRANCE"
+    MELEE = "MELEE"
+    RANGED = "RANGED"
+    RECOVERY = "RECOVERY"
+    SURE_HIT = "SURE_HIT"
+
+
+class MoveSet(str, enum.Enum):
+    BASIC = "BASIC"
+    FIRST_SET = "FIRST_SET"
+    SECOND_SET = "SECOND_SET"
+    UNITE_MOVE = "UNITE_MOVE"
+    PASIVE = "PASIVE"
+
 class Pokemon(Base):
     __tablename__ = "pokemons"
 
@@ -44,10 +63,10 @@ class Pokemon(Base):
     image = Column(String)
     video = Column(String)
 
-    stadistics = relationship("Stadistics", back_populates="pokemon")
-    prices = relationship("PokemonPrice", back_populates="pokemon")
-    skins = relationship("Skin", back_populates="pokemon")
-    moves = relationship("Move", back_populates="pokemon")
+    stadistics = relationship("Stadistics", back_populates="pokemon", uselist=False, cascade="all, delete")
+    prices = relationship("PokemonPrice", back_populates="pokemon", uselist=False, cascade="all, delete")
+    skins = relationship("Skin", back_populates="pokemon", cascade="all, delete")
+    moves = relationship("Move", back_populates="pokemon", cascade="all, delete")
 
 
 class Stadistics(Base):
@@ -60,7 +79,7 @@ class Stadistics(Base):
     scoring = Column(Float, nullable=False)
     support = Column(Float, nullable=False)
 
-    pokemon = relationship("Pokemon", back_populates="stadistics")
+    pokemon = relationship("Pokemon", back_populates="stadistics", uselist=False)
 
 
 class PokemonPrice(Base):
@@ -70,7 +89,7 @@ class PokemonPrice(Base):
     aeos_coins = Column(Integer, nullable=False)
     aeos_gems = Column(Integer, nullable=False)
 
-    pokemon = relationship("Pokemon", back_populates="prices")
+    pokemon = relationship("Pokemon", back_populates="prices", uselist=False)
 
 
 class Skin(Base):
@@ -82,3 +101,19 @@ class Skin(Base):
     gems_cost = Column(Integer, nullable=False)
 
     pokemon = relationship("Pokemon", back_populates="skins")
+
+
+class Move(Base):
+    __tablename__ = "moves"
+
+    id = Column(Integer, primary_key=True, index=True)
+    pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+    name = Column(String, nullable=False)
+    description = Column(String)
+    type = Column(Enum(MoveType), nullable=False)
+    image = Column(String)
+    level = Column(Integer, nullable=False)
+    set = Column(Enum(MoveSet), nullable=False)
+    cool_down = Column(Integer, nullable=False)
+
+    pokemon = relationship("Pokemon", back_populates="moves")

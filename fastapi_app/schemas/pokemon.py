@@ -3,8 +3,6 @@ import enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from fastapi_app.schemas.move import Move, MoveCreate
-
 
 class MapStreet(str, enum.Enum):
     TOP = "TOP"
@@ -20,7 +18,6 @@ class PokemonType(str, enum.Enum):
     SPEEDSTER = "SPEEDSTER"
     SUPPORTER = "SUPPORTER"
 
-
 class PokemonDifficulty(str, enum.Enum):
     NOVICE = "NOVICE"
     INTERMEDIATE = "INTERMEDIATE"
@@ -30,6 +27,25 @@ class PokemonDifficulty(str, enum.Enum):
 class AttackType(str, enum.Enum):
     SPECIAL = "SPECIAL"
     PHYSICAL = "PHYSICAL"
+
+
+class MoveType(str, enum.Enum):
+    AREA = "AREA"
+    BUFF = "BUFF"
+    DASH = "DASH"
+    DEBUFF = "DEBUFF"
+    HINDRANCE = "HINDRANCE"
+    MELEE = "MELEE"
+    RANGED = "RANGED"
+    RECOVERY = "RECOVERY"
+    SURE_HIT = "SURE_HIT"
+
+class MoveSet(str, enum.Enum):
+    BASIC = "BASIC"
+    FIRST_SET = "FIRST_SET"
+    SECOND_SET = "SECOND_SET"
+    UNITE_MOVE = "UNITE_MOVE"
+    PASIVE = "PASIVE"
 
 
 class StadisticsBase(BaseModel):
@@ -75,7 +91,34 @@ class Skin(SkinBase):
     id: int = Field(..., description="Skin's identifier in the database.", example=1)
     pokemon_id: int
 
+    # Pydantic's orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
+    # (or any other arbitrary object with attributes). So, in will try to read data["id"] and also data.id
+    class Config:
+        orm_mode = True
+
 class SkinCreate(SkinBase):
+    pass
+
+
+class MoveBase(BaseModel):
+    name: str = Field(..., description="Move's name.", example="Thunder")
+    description: Optional[str] = Field(..., description="Move's details.", example="Throw a thunder in an area that stun the enemies.")
+    type: MoveType  = Field(..., description="Move's type.", example="AREA")
+    image: Optional[str] = Field(..., description="Move's image.", example="https://thunder.jpg")
+    level: int = Field(..., description="Level to which the pokemon learn the move.", example=6)
+    set: MoveSet = Field(..., description="Set to which the move belongs to.", example="FIRST_SET")
+    cool_down: int = Field(..., description="Time, in second, to use the move again.", example=8)
+
+class Move(MoveBase):
+    id: int = Field(..., description="Move's identifier in the database.", example=1)    
+    pokemon_id: int = Field(..., description="Identifier of the Pokemon to which the move belongs to.", example=1)
+
+    # Pydantic's orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
+    # (or any other arbitrary object with attributes). So, in will try to read data["id"] and also data.id
+    class Config:
+        orm_mode = True
+
+class MoveCreate(MoveBase):
     pass
 
 
@@ -95,6 +138,7 @@ class Pokemon(PokemonBase):
     prices: Optional[PokemonPrice]
     skins: Optional[List[Skin]]
     moves: Optional[List[Move]]
+
     # Pydantic's orm_mode will tell the Pydantic model to read the data even if it is not a dict, but an ORM model
     # (or any other arbitrary object with attributes). So, in will try to read data["id"] and also data.id
     class Config:
