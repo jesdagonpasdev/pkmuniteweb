@@ -70,25 +70,72 @@ def get_pokemon_by_attributes(db: Session, pokemon: schemas.PokemonCreate):
 
 
 # UPDATE
+def update_pokemon(db: Session, pokemon: schemas.Pokemon, pokemon_to_update: schemas.Pokemon):
+    # Update model class variable from requested fields
+    pokemon_to_update.name = pokemon.name if pokemon.name is not None else pokemon_to_update.name
+    pokemon_to_update.type = pokemon.type if pokemon.type is not None else pokemon_to_update.type
+    pokemon_to_update.difficulty = pokemon.difficulty if pokemon.difficulty is not None else pokemon_to_update.difficulty
+    pokemon_to_update.street = pokemon.street if pokemon.street is not None else pokemon_to_update.street
+    pokemon_to_update.attack_type = pokemon.attack_type if pokemon.attack_type is not None else pokemon_to_update.attack_type
+    pokemon_to_update.image = pokemon.image if pokemon.image is not None else pokemon_to_update.image
+    pokemon_to_update.video = pokemon.video if pokemon.video is not None else pokemon_to_update.video
 
-def update_pokemon(db: Session, pokemon: schemas.Pokemon):
-    model_pokemon = schemas.PokemonCreate(
-        name=pokemon.name,
-        type=pokemon.type,
-        difficulty=pokemon.difficulty,
-        street=pokemon.street,
-        attack_type=pokemon.attack_type,
-        image=pokemon.image,
-        video=pokemon.video
-    )
-    update_data = pokemon.dict(exclude_unset=True)
-    update_pokemon = model_pokemon.copy(update=update_data)
-    db_pokemon = jsonable_encoder(update_pokemon)
-    return update_pokemon
+    db.commit()
+    return pokemon_to_update
+
+def update_stadistics(db: Session, stadistics: schemas.Pokemon, stadistics_to_update: schemas.Pokemon):
+    # Update model class variable from requested fields
+    stadistics_to_update.offense = stadistics.offense if stadistics.offense is not None else stadistics_to_update.offense
+    stadistics_to_update.endurance = stadistics.endurance if stadistics.endurance is not None else stadistics_to_update.endurance
+    stadistics_to_update.mobility = stadistics.mobility if stadistics.mobility is not None else stadistics_to_update.mobility
+    stadistics_to_update.scoring = stadistics.scoring if stadistics.scoring is not None else stadistics_to_update.scoring
+    stadistics_to_update.support = stadistics.support if stadistics.support is not None else stadistics_to_update.support
+
+    db.commit()
+    return stadistics_to_update
+
+def update_prices(db: Session, pokemon: schemas.Pokemon, pokemon_to_update: schemas.Pokemon):
+    # Update model class variable from requested fields
+    pokemon_to_update.name = pokemon.name if pokemon.name is not None else pokemon_to_update.name
+    pokemon_to_update.type = pokemon.type if pokemon.type is not None else pokemon_to_update.type
+    pokemon_to_update.difficulty = pokemon.difficulty if pokemon.difficulty is not None else pokemon_to_update.difficulty
+    pokemon_to_update.street = pokemon.street if pokemon.street is not None else pokemon_to_update.street
+    pokemon_to_update.attack_type = pokemon.attack_type if pokemon.attack_type is not None else pokemon_to_update.attack_type
+    pokemon_to_update.image = pokemon.image if pokemon.image is not None else pokemon_to_update.image
+    pokemon_to_update.video = pokemon.video if pokemon.video is not None else pokemon_to_update.video
+
+    db.commit()
+    return pokemon_to_update
+
+def update_skin(db: Session, pokemon: schemas.Pokemon, pokemon_to_update: schemas.Pokemon):
+    # Update model class variable from requested fields
+    pokemon_to_update.name = pokemon.name if pokemon.name is not None else pokemon_to_update.name
+    pokemon_to_update.type = pokemon.type if pokemon.type is not None else pokemon_to_update.type
+    pokemon_to_update.difficulty = pokemon.difficulty if pokemon.difficulty is not None else pokemon_to_update.difficulty
+    pokemon_to_update.street = pokemon.street if pokemon.street is not None else pokemon_to_update.street
+    pokemon_to_update.attack_type = pokemon.attack_type if pokemon.attack_type is not None else pokemon_to_update.attack_type
+    pokemon_to_update.image = pokemon.image if pokemon.image is not None else pokemon_to_update.image
+    pokemon_to_update.video = pokemon.video if pokemon.video is not None else pokemon_to_update.video
+
+    db.commit()
+    return pokemon_to_update
+
+def update_move(db: Session, pokemon: schemas.Pokemon, pokemon_to_update: schemas.Pokemon):
+    # Update model class variable from requested fields
+    pokemon_to_update.name = pokemon.name if pokemon.name is not None else pokemon_to_update.name
+    pokemon_to_update.type = pokemon.type if pokemon.type is not None else pokemon_to_update.type
+    pokemon_to_update.difficulty = pokemon.difficulty if pokemon.difficulty is not None else pokemon_to_update.difficulty
+    pokemon_to_update.street = pokemon.street if pokemon.street is not None else pokemon_to_update.street
+    pokemon_to_update.attack_type = pokemon.attack_type if pokemon.attack_type is not None else pokemon_to_update.attack_type
+    pokemon_to_update.image = pokemon.image if pokemon.image is not None else pokemon_to_update.image
+    pokemon_to_update.video = pokemon.video if pokemon.video is not None else pokemon_to_update.video
+
+    db.commit()
+    return pokemon_to_update
+
 
 
 # DELETE
-
 def delete_pokemon(db: Session, pokemon_id: int):
     db_pokemon = db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
     if db_pokemon is None:

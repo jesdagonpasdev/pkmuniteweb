@@ -163,7 +163,11 @@ def read_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
     tags=['Pokemons']
 )
 async def update_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)):
-    updated_pokemon = pokemon_crud.update_pokemon(db, pokemon=pokemon)
+    try:
+        updated_pokemon = pokemon_logic.pokemon_update(db, pokemon=pokemon)
+    except pokemon_logic.PokemonDoesntExist:
+        raise HTTPException(status_code=400, detail="Pokemon not registered.")
+
     return updated_pokemon 
   
 
@@ -193,8 +197,9 @@ def create_pokemon(pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)
     tags=['Pokemons']
 )
 async def delete_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
-    result = pokemon_crud.delete_pokemon(db, pokemon_id=pokemon_id)
-    if result == 0:
+    try:
+        result = pokemon_crud.delete_pokemon(db, pokemon_id=pokemon_id)
+    except pokemon_logic.PokemonDoesntExist:
         raise HTTPException(status_code=400, detail="Pokemon not registered.")
-    else:
-        return True
+    
+    return True

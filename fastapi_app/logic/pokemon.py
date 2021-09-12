@@ -6,6 +6,9 @@ from fastapi_app.crud import pokemon as pokemon_crud
 class PokemonAlreadyExist(Exception):
     pass
 
+class PokemonDoesntExist(Exception):
+    pass
+
 class PokemonCreateException(Exception):
     pass
 
@@ -39,5 +42,12 @@ def pokemon_create(db: Session, pokemon: schemas.PokemonCreate):
     return pokemon_crud.get_pokemon(db=db, pokemon_id=created_pokemon.id)
 
 
-def pokemon_update(db: Session, pokemon: schemas.PokemonCreate):
-    pass
+def pokemon_update(db: Session, pokemon: schemas.Pokemon):
+    existed_pokemon = pokemon_crud.get_pokemon(db=db, pokemon_id=pokemon.id)
+    if not existed_pokemon:
+        raise PokemonDoesntExist
+    
+    pokemon_crud.update_pokemon(db=db, pokemon=pokemon, pokemon_to_update=existed_pokemon)
+    pokemon_crud.update_stadistics(db=db, stadistics=pokemon.stadistics, stadistics_to_update=existed_pokemon.stadistics)
+
+    return pokemon_crud.get_pokemon(db=db, pokemon_id=pokemon.id)
